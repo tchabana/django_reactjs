@@ -16,6 +16,7 @@ import EditContact, {
 } from "./routes/edit";
 import { action as destroyAction } from "./routes/destroy";
 import Index from "./routes/index";
+import "./service/ApiRoute"
 const router = createBrowserRouter([
   {
     path: "/",
