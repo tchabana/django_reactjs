@@ -1,5 +1,6 @@
 # Django + React + Vite
 
+```
 django_reactjs
 |    ├── back
 |    │   ├── contacts
@@ -45,3 +46,4 @@ django_reactjs
 |    │   └── vite.config.js
 |    ├── README.md
 |    └── requirements.txt
+```
