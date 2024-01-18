@@ -1,7 +1,8 @@
 import { Link, Outlet,useLoaderData,Form, redirect, NavLink,useNavigation, useSubmit, } from "react-router-dom";
 
 import { getContacts, createContact } from "../contacts";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { getContacts as apiGetContacts } from "../service/DataFetch";
 export async function action() {
   const contact = await createContact();
   return redirect(`/contacts/${contact.id}/edit`);
@@ -13,7 +14,8 @@ export async function loader({ request }) {
     return { contacts, q };
 }
 export default function Root() {
-    const { contacts, q } = useLoaderData();
+    const { contacts: contactss, q } = useLoaderData();
+    const [ contacts, setConatacts ] = useState([]);
     const navigation = useNavigation();
     const submit = useSubmit();
 
@@ -24,7 +26,10 @@ export default function Root() {
     );
 
     useEffect(() => {
-        document.getElementById("q").value = q;
+      document.getElementById("q").value = q;
+      apiGetContacts().then((r)=> {
+        setConatacts(r.data);
+      });
     }, [q]);
     return (
       <>
@@ -76,9 +81,9 @@ export default function Root() {
                         : ""
                     }
                   >
-                    {contact.first || contact.last ? (
+                    {contact.first_name || contact.last_name ? (
                       <>
-                        {contact.first} {contact.last}
+                        {contact.first_name} {contact.last_name}
                       </>
                     ) : (
                       <i>No Name</i>
