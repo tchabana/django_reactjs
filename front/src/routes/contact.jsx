@@ -1,5 +1,7 @@
-import { Form, useFetcher, useLoaderData } from "react-router-dom";
-import { getContact, updateContact } from "../contacts";
+import { Form, useFetcher, useLoaderData, useParams } from "react-router-dom";
+import { updateContact } from "../contacts";
+import { getContact } from "../service/DataFetch";
+import { useEffect, useState } from "react";
 
 export async function action({ request, params }) {
   let formData = await request.formData();
@@ -14,41 +16,48 @@ export async function loader({ params }) {
 
 
 export default function Contact() {
-    const { contact } = useLoaderData();
-
+    const {contactId} = useParams();
+    const [contact,setContact] = useState();
+    useEffect(() => {
+      getContact(contactId).then((r)=> {
+        setContact(r.data);
+      });
+    }, [contactId]);
   return (
     <div id="contact">
       <div>
         <img
-          key={contact.avatar}
-          src={contact.avatar || null}
+          key={contact?.avatar}
+          src={contact?.avatar || null}
         />
       </div>
 
       <div>
         <h1>
-          {contact.first || contact.last ? (
+          {contact?.first_name || contact?.last_name ? (
             <>
-              {contact.first} {contact.last}
+              {contact?.first_name} {contact?.last_name}
             </>
           ) : (
             <i>No Name</i>
           )}{" "}
           <Favorite contact={contact} />
         </h1>
-
-        {contact.twitter && (
+        <h3>
+          {contact?.phone}
+        </h3>
+        {contact?.twitter && (
           <p>
             <a
               target="_blank"
-              href={`https://twitter.com/${contact.twitter}`}
+              href={`https://twitter.com/${contact?.twitter}`}
             >
-              {contact.twitter}
+              {contact?.twitter}
             </a>
           </p>
         )}
 
-        {contact.notes && <p>{contact.notes}</p>}
+        {contact?.notes && <p>{contact?.notes}</p>}
 
         <div>
           <Form action="edit">
@@ -78,7 +87,7 @@ export default function Contact() {
 function Favorite({ contact }) {
    const fetcher = useFetcher();
   // yes, this is a `let` for later
-  let favorite = contact.favorite;
+  let favorite = contact?.stared;
   return (
     <fetcher.Form method="post">
       <button

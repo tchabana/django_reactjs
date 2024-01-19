@@ -17,6 +17,9 @@ import EditContact, {
 import { action as destroyAction } from "./routes/destroy";
 import Index from "./routes/index";
 import "./service/ApiRoute"
+import CreateContact,{
+  action as createContact,
+} from "./routes/create";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -33,9 +36,14 @@ const router = createBrowserRouter([
         action: contactAction,
       },
       {
+        path: "contacts-create/",
+        element: <CreateContact />,
+        action: createContact,
+      },
+      {
         path: "contacts/:contactId/edit",
         element: <EditContact />,
-        loader: contactLoader,
+        //loader: contactLoader,
         action: editAction,
       },
       {

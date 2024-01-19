@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { getContacts as apiGetContacts } from "../service/DataFetch";
 export async function action() {
   const contact = await createContact();
-  return redirect(`/contacts/${contact.id}/edit`);
+  return redirect("contacts-create/");
 }
 export async function loader({ request }) {
     const url = new URL(request.url);
@@ -14,7 +14,7 @@ export async function loader({ request }) {
     return { contacts, q };
 }
 export default function Root() {
-    const { contacts: contactss, q } = useLoaderData();
+    const { q } = useLoaderData();
     const [ contacts, setConatacts ] = useState([]);
     const navigation = useNavigation();
     const submit = useSubmit();
@@ -62,9 +62,9 @@ export default function Root() {
                 aria-live="polite"
               ></div>
             </Form>
-            <Form method="post">
+            <NavLink to={"contacts-create/"}>
                 <button type="submit">New</button>
-            </Form>
+            </NavLink>
           </div>
           <nav>
           {contacts.length ? (
