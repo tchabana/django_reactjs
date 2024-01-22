@@ -1,72 +1,36 @@
-import { Link, Outlet,useLoaderData,Form, redirect, NavLink,useNavigation, useSubmit, } from "react-router-dom";
-
-import { getContacts, createContact } from "../contacts";
+import { Outlet,  NavLink, useNavigation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getContacts as apiGetContacts } from "../service/DataFetch";
-export async function action() {
-  const contact = await createContact();
-  return redirect("contacts-create/");
-}
-export async function loader({ request }) {
-    const url = new URL(request.url);
-    const q = url.searchParams.get("q");
-    const contacts = await getContacts(q);
-    return { contacts, q };
-}
+
 export default function Root() {
-    const { q } = useLoaderData();
-    const [ contacts, setConatacts ] = useState([]);
-    const navigation = useNavigation();
-    const submit = useSubmit();
-
-    const searching =
-    navigation.location &&
-    new URLSearchParams(navigation.location.search).has(
-      "q"
-    );
-
-    useEffect(() => {
-      document.getElementById("q").value = q;
-      apiGetContacts().then((r)=> {
-        setConatacts(r.data);
-      });
-    }, [q]);
-    return (
-      <>
-        <div id="sidebar">
-          <h1>React Router Contacts</h1>
-          <div>
-            <Form id="search-form" role="search">
-              <input
-                id="q"
-                aria-label="Search contacts"
-                placeholder="Search"
-                type="search"
-                name="q"
-                className={searching ? "loading" : ""}
-                defaultValue={q}
-                onChange={(event) => {
-                    const isFirstSearch = q == null;
-                     submit(event.currentTarget.form, {
-                     replace: !isFirstSearch,
-                    });
-                  }}
-              />
-              <div
-                id="search-spinner"
-                aria-hidden
-                hidden={!searching}
-              />
-              <div
-                className="sr-only"
-                aria-live="polite"
-              ></div>
-            </Form>
-            <NavLink to={"contacts-create/"}>
-                <button type="submit">New</button>
-            </NavLink>
-          </div>
-          <nav>
+  const [contacts, setConatacts] = useState([]);
+  const navigation = useNavigation();
+  
+  useEffect(() => {
+    apiGetContacts().then((r) => {
+      setConatacts(r.data);
+    });
+  },[]);
+  
+  return (
+    <>
+      <div id="sidebar">
+        <h1>React Router Contacts</h1>
+        <div>
+          <form id="search-form" role="search">
+            <input
+              id="q"
+              aria-label="Search contacts"
+              placeholder="Search"
+              type="search"
+              name="q"
+            />
+          </form>
+          <NavLink to={"contacts-create/"}>
+            <button type="submit">New</button>
+          </NavLink>
+        </div>
+        <nav>
           {contacts.length ? (
             <ul>
               {contacts.map((contact) => (
@@ -77,8 +41,8 @@ export default function Root() {
                       isActive
                         ? "active"
                         : isPending
-                        ? "pending"
-                        : ""
+                          ? "pending"
+                          : ""
                     }
                   >
                     {contact.first_name || contact.last_name ? (
@@ -89,7 +53,7 @@ export default function Root() {
                       <i>No Name</i>
                     )}{" "}
                     {contact.favorite && <span>★</span>}
-                    </NavLink>
+                  </NavLink>
                 </li>
               ))}
             </ul>
@@ -98,15 +62,15 @@ export default function Root() {
               <i>No contacts</i>
             </p>
           )}
-          </nav>
-        </div>
-        <div id="detail"
-            className={
-                navigation.state === "loading" ? "loading" : ""
-              }
-        >
-            <Outlet />
-        </div>
-      </>
-    );
-  }
+        </nav>
+      </div>
+      <div id="detail"
+        className={
+          navigation.state === "loading" ? "loading" : ""
+        }
+      >
+        <Outlet />
+      </div>
+    </>
+  );
+}

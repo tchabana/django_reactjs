@@ -1,28 +1,23 @@
-import { Form, useFetcher, useLoaderData, useParams } from "react-router-dom";
-import { updateContact } from "../contacts";
-import { getContact } from "../service/DataFetch";
+import { NavLink, useFetcher, useParams,redirect } from "react-router-dom";
+import { useForm} from "react-hook-form";
+import { deleteContact, getContact } from "../service/DataFetch";
 import { useEffect, useState } from "react";
 
-export async function action({ request, params }) {
-  let formData = await request.formData();
-  return updateContact(params.contactId, {
-    favorite: formData.get("favorite") === "true",
-  });
-}
-export async function loader({ params }) {
-  const contact = await getContact(params.contactId);
-  return { contact };
-}
-
-
 export default function Contact() {
-    const {contactId} = useParams();
-    const [contact,setContact] = useState();
-    useEffect(() => {
-      getContact(contactId).then((r)=> {
-        setContact(r.data);
-      });
-    }, [contactId]);
+  const { handleSubmit } = useForm()
+  const { contactId } = useParams();
+  const [contact, setContact] = useState();
+  const onSubmit = () => {
+    deleteContact(contactId);
+    alert('supression effectuer.');
+    //window.location.assign("/")
+    return redirect("/");
+  }
+  useEffect(() => {
+    getContact(contactId).then((r) => {
+      setContact(r.data);
+    });
+  }, [contactId]);
   return (
     <div id="contact">
       <div>
@@ -60,24 +55,12 @@ export default function Contact() {
         {contact?.notes && <p>{contact?.notes}</p>}
 
         <div>
-          <Form action="edit">
+          <NavLink to={`/contacts/${contactId}/edit`}>
             <button type="submit">Edit</button>
-          </Form>
-          <Form
-            method="post"
-            action="destroy"
-            onSubmit={(event) => {
-              if (
-                !confirm(
-                  "Please confirm you want to delete this record."
-                )
-              ) {
-                event.preventDefault();
-              }
-            }}
-          >
-            <button type="submit">Delete</button>
-          </Form>
+          </NavLink>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <button id="error" type="submit">Delete</button>
+          </form>
         </div>
       </div>
     </div>
@@ -85,7 +68,7 @@ export default function Contact() {
 }
 
 function Favorite({ contact }) {
-   const fetcher = useFetcher();
+  const fetcher = useFetcher();
   // yes, this is a `let` for later
   let favorite = contact?.stared;
   return (
@@ -101,6 +84,6 @@ function Favorite({ contact }) {
       >
         {favorite ? "★" : "☆"}
       </button>
-      </fetcher.Form>
+    </fetcher.Form>
   );
 }

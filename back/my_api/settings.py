@@ -14,7 +14,7 @@ SECRET_KEY = 'django-insecure-3w(zt@@x2c(02&2s%sq@nf#38m3tqm=3clld(+1b74%q*9mfm=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1','*']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -128,3 +128,25 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_URL = '/media/'
 
 CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_ALLOW =['*']
+
+CORS_ALLOW_METHODS = [
+    "DELETE",
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST",
+    "PUT",
+]
+
+CORS_ALLOW_HEADERS = [
+    "accept",
+    "accept-encoding",
+    "authorization",
+    "content-type",
+    "dnt",
+    "origin",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+]
