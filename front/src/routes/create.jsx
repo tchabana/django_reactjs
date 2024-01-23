@@ -57,11 +57,11 @@ export default function CreateContact() {
       <label>
         <span>Avatar URL</span>
         <input
-          //{...register("avatar")}
+          {...register("avatar")}
           placeholder="https://example.com/avatar.jpg"
           aria-label="Avatar URL"
           type="file"
-          //name="avatar"
+          name="avatar"
         />
       </label>
       <label>

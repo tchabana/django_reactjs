@@ -16,10 +16,13 @@ export default function EditContact() {
     getContact(contactId).then((r)=> {
       setContact(r.data);
       reset(r.data);
+      setValue("avatar",r.data.avatar);
+      console.log(r.data.avatar);
     });
   }, []);
   let inital = {...contact}
-  const { register, handleSubmit, formState: { errors },reset } = useForm({ defaultValues:inital})
+  const { register, handleSubmit, formState: { errors },reset ,setValue} = useForm({ defaultValues:inital})
+  
   return (
     <form onSubmit={handleSubmit(onSubmit)} id="contact-form" encType="multipart/form-data">
       <p>
@@ -71,8 +74,6 @@ export default function EditContact() {
         <span>Avatar URL</span>
         <input
           {...register("avatar")}
-          placeholder="https://example.com/avatar.jpg"
-          aria-label="Avatar URL"
           type="file"
           name="avatar"
         />
@@ -92,7 +93,7 @@ export default function EditContact() {
           {...register("stared")}
           name="stared"
           type="checkbox"
-          checked={inital?.stared}
+          defaultChecked={inital?.stared}
         />
       </p>
       <p>

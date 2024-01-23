@@ -6,6 +6,6 @@ class Contact(models.Model):
     last_name = models.CharField(max_length=50)
     twitter = models.CharField(max_length=50)
     phone = models.CharField(max_length=100, unique=True)
-    notes = models.CharField(max_length=500)
-    avatar = models.ImageField(null=True,default=None)
+    notes = models.CharField(max_length=500,blank=True,null=True)
+    avatar = models.ImageField(null=True,default=None,blank=True)
     stared = models.BooleanField()

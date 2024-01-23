@@ -1,0 +1,48 @@
+<!-- contacts_template.html -->
+
+{% extends '../base.html' %} 
+{% block content %}
+<div id="sidebar">
+  <h1>Gerer Vos Contacts</h1>
+  <div>
+    <form id="search-form" role="search">
+      <input
+        id="q"
+        aria-label="Search contacts"
+        placeholder="Search"
+        type="search"
+        name="q"
+      />
+    </form>
+    <a href="{% url 'contact_create' %}">
+      <button type="submit">New</button>
+    </a>
+  </div>
+  <nav>
+    {% if contacts %}
+    <ul>
+      {% for contact in contacts %}
+      <li>
+        <a href="{% url 'contact_show' pk=contact.pk %}">
+          {{ contact.first_name|default:"" }} {{ contact.last_name|default:"" }}
+          {% if contact.favorite %}
+          <span>★</span>
+          {% endif %}
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p>
+      <i>No contacts</i>
+    </p>
+    {% endif %}
+  </nav>
+</div>
+<div
+  id="detail"
+  class="{% if navigation_state == 'loading' %}loading{% endif %}"
+>
+  {% block outlet %}{% endblock %}
+</div>
+{% endblock %}

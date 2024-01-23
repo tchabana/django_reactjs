@@ -18,11 +18,16 @@ export async function getContacts() {
 
 export async function createContact(data) {
     try {
-        const response = await axios.post(CREATE_OR_LIST_CONTACT, data, {
-            headers: {
-                "Content-Type": "multipart/form-data",
-            }
-        });
+        const formData = new FormData();
+
+        formData.append("first_name", data.first_name);
+        formData.append("last_name", data.last_name);
+        formData.append("twitter", data.twitter);
+        formData.append("phone", data.phone);
+        formData.append("avatar", data.avatar[0]);
+        formData.append("notes", data.notes);
+        formData.append("stared", data.stared);
+        const response = await axios.post(CREATE_OR_LIST_CONTACT, formData);
         return response;
     } catch (error) {
         console.error(error);
@@ -44,12 +49,11 @@ export async function updateContact(id, updates) {
     try {
         const formData = new FormData();
 
-        // Ajoutez les champs de formulaire à FormData
         formData.append("first_name", updates.first_name);
         formData.append("last_name", updates.last_name);
         formData.append("twitter", updates.twitter);
         formData.append("phone", updates.phone);
-        formData.append("avatar", updates.avatar[0]); // Assurez-vous que "avatar" correspond au nom de votre champ de fichier
+        formData.append("avatar", updates.avatar[0]);
         formData.append("notes", updates.notes);
         formData.append("stared", updates.stared);
         const response = await axios({
