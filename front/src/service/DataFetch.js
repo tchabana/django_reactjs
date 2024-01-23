@@ -19,14 +19,15 @@ export async function getContacts() {
 export async function createContact(data) {
     try {
         const formData = new FormData();
-
         formData.append("first_name", data.first_name);
         formData.append("last_name", data.last_name);
         formData.append("twitter", data.twitter);
         formData.append("phone", data.phone);
-        formData.append("avatar", data.avatar[0]);
         formData.append("notes", data.notes);
         formData.append("stared", data.stared);
+        if (data.avatar[0]) {
+            formData.append("avatar", data.avatar[0]);
+        }
         const response = await axios.post(CREATE_OR_LIST_CONTACT, formData);
         return response;
     } catch (error) {
@@ -48,14 +49,16 @@ export async function getContact(id) {
 export async function updateContact(id, updates) {
     try {
         const formData = new FormData();
-
+        //console.log(updates.avatar);
         formData.append("first_name", updates.first_name);
         formData.append("last_name", updates.last_name);
         formData.append("twitter", updates.twitter);
         formData.append("phone", updates.phone);
-        formData.append("avatar", updates.avatar[0]);
         formData.append("notes", updates.notes);
         formData.append("stared", updates.stared);
+        if (updates.avatar!=null) {
+            formData.append("avatar", updates.avatar[0]);
+        }
         const response = await axios({
             method: 'put',
             url: UPDATE_CONTACT(id),

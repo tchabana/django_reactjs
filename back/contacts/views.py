@@ -16,6 +16,9 @@ class ContactUpdate(generics.UpdateAPIView):
     parser_classes = [MultiPartParser, FormParser]
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer
+    def perform_update(self, serializer):
+        avatar_file = self.request.data.get('avatar')
+        serializer.save(avatar=avatar_file)
 class ContactDelete(generics.DestroyAPIView):
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer

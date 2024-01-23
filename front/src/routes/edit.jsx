@@ -1,28 +1,32 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { getContact, updateContact } from "../service/DataFetch";
 import { useEffect, useState } from "react";
-import { useForm} from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { useAppContext } from "../context/AppContext";
 
 export default function EditContact() {
-  const [contact,setContact] = useState();
-  const {contactId} = useParams();
+  const { contacts, setConatacts } = useAppContext();
+  const [contact, setContact] = useState();
+  const { contactId } = useParams();
   const navigate = useNavigate();
   const onSubmit = (data) => {
     console.log(data);
-    updateContact(contactId,data);
+    updateContact(contactId, data).then((r)=>{
+      setConatacts([...contacts,r.data])
+      console.log(r.data);
+    });
     navigate("/")
   }
   useEffect(() => {
-    getContact(contactId).then((r)=> {
+    getContact(contactId).then((r) => {
       setContact(r.data);
       reset(r.data);
-      setValue("avatar",r.data.avatar);
       console.log(r.data.avatar);
     });
   }, []);
-  let inital = {...contact}
-  const { register, handleSubmit, formState: { errors },reset ,setValue} = useForm({ defaultValues:inital})
-  
+  let inital = { ...contact }
+  const { register, handleSubmit, formState: { errors }, reset } = useForm({ defaultValues: inital })
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} id="contact-form" encType="multipart/form-data">
       <p>
@@ -35,7 +39,7 @@ export default function EditContact() {
           name="first_name"
           defaultValue={inital.first_name}
         />
-        
+
         <input
           {...register("last_name")}
           placeholder="Last"
@@ -52,7 +56,7 @@ export default function EditContact() {
       <label>
         <span>Twitter</span>
         <input
-        {...register("twitter")}
+          {...register("twitter")}
           type="text"
           name="twitter"
           placeholder="@jack"
@@ -72,6 +76,9 @@ export default function EditContact() {
       {errors.phone && <span id="error">Veuillez saisir le tel</span>}
       <label>
         <span>Avatar URL</span>
+        {contact && contact.avatar && (
+          <img src={contact.avatar} alt="Current Avatar" style={{ maxWidth: "100px" }} />
+        )}
         <input
           {...register("avatar")}
           type="file"
@@ -81,14 +88,14 @@ export default function EditContact() {
       <label>
         <span>Notes</span>
         <textarea
-        {...register("notes")}
+          {...register("notes")}
           name="notes"
           defaultValue={contact?.notes}
           rows={6}
         />
       </label>
       <p>
-      <span>Stared</span>
+        <span>Stared</span>
         <input
           {...register("stared")}
           name="stared"
@@ -98,12 +105,12 @@ export default function EditContact() {
       </p>
       <p>
         <button type="submit">Save</button>
-        <button 
-            type="button"
-            onClick={() => {
-                navigate(-1);
-              }}
-            >Cancel</button>
+        <button
+          type="button"
+          onClick={() => {
+            navigate(-1);
+          }}
+        >Cancel</button>
       </p>
     </form>
   );

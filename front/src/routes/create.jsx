@@ -1,13 +1,18 @@
-import { redirect, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import { useForm} from "react-hook-form";
 import { createContact } from "../service/DataFetch";
+import { useAppContext } from "../context/AppContext";
 
 
 export default function CreateContact() {
-  const { register, handleSubmit, reset, formState: { errors } } = useForm()
+  const { contacts, setConatacts } = useAppContext();
+  const { register, handleSubmit, formState: { errors } } = useForm()
   const navigate = useNavigate();
   const onSubmit = (data) => {
-    createContact(data);
+    createContact(data).then((r)=>{
+      setConatacts([...contacts,r.data])
+      console.log(r.data);
+    });
     navigate("/")
   }
   return (

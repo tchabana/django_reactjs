@@ -3,9 +3,11 @@ import { matchSorter } from "match-sorter";
 
 import { useEffect, useState } from "react";
 import { getContacts as apiGetContacts } from "../service/DataFetch";
+import { useAppContext } from "../context/AppContext";
 
 export default function Root() {
-  const [contacts, setConatacts] = useState([]);
+  const { contacts, setConatacts } = useAppContext();
+  //const [contacts, setConatacts] = useState([]);
   const [q, setQ] = useState('');
   const navigation = useNavigation();
   const handlSearch = (q)=>{
@@ -13,11 +15,11 @@ export default function Root() {
       setConatacts(matchSorter(contacts, q, { keys: ["first_name", "last_name"] }));
     }
   }
-  useEffect(() => {
-    apiGetContacts().then((r) => {
-      setConatacts(r.data);
-    });
-  },[]);
+  // useEffect(() => {
+  //   apiGetContacts().then((r) => {
+  //     setConatacts(r.data);
+  //   });
+  // },[]);
   
   return (
     <>

@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { BrowserRouter, createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
 import ErrorPage from "./error-page";
 import Contact from "./routes/contact";
@@ -9,6 +9,7 @@ import EditContact from "./routes/edit";
 import Index from "./routes/index";
 import "./service/ApiRoute";
 import CreateContact from "./routes/create";
+import { AppProvider } from "./context/AppContext";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -32,8 +33,18 @@ const router = createBrowserRouter([
   },
 ]);
 
+// ReactDOM.createRoot(document.getElementById("root")).render(
+//   <React.StrictMode>
+//     <RouterProvider router={router} />
+//   </React.StrictMode>
+// );
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+      <AppProvider>
+        <RouterProvider router={router}>
+          <Root />
+        </RouterProvider>
+      </AppProvider>
   </React.StrictMode>
 );
